@@ -3,7 +3,7 @@
 
 
 ### FHIR Tutorial do the transform
-POST {{host}}/matchbox/fhir/StructureMap/$transform?source=http://fhir.ch/ig/ch-epr-data-oe/immunizationadministration
+POST {{host}}/matchboxv3/fhir/StructureMap/$transform?source=http://fhir.ch/ig/ch-epr-data-oe/StructureMap/AdaptImmunizationAdministration
 Accept: application/fhir+json
 Content-Type: application/fhir+json
 
@@ -11,7 +11,7 @@ Content-Type: application/fhir+json
 
 
 ### FHIR Tutorial do the transform
-POST {{host}}/matchbox/fhir/StructureMap/$transform?source=http://fhir.ch/ig/ch-epr-data-oe/immunizationadministration
+POST {{host}}/matchboxv3/fhir/StructureMap/$transform?source=http://fhir.ch/ig/ch-epr-data-oe/StructureMap/AdaptImmunizationAdministration
 Accept: application/fhir+json
 Content-Type: application/fhir+json
 
@@ -19,14 +19,14 @@ Content-Type: application/fhir+json
 
 
 ### FHIR Tutorial do the transform
-POST {{host}}/matchbox/fhir/StructureMap/$transform?source=http://fhir.ch/ig/ch-epr-data-oe/immunizationadministration
+POST {{host}}/matchboxv3/fhir/StructureMap/$transform?source=http://fhir.ch/ig/ch-epr-data-oe/StructureMap/AdaptImmunizationAdministration
 Accept: application/fhir+json
 Content-Type: application/fhir+json
 
 < ./input/resources/2024-06-16-FSME.json
 
 ### FHIR Tutorial do the transform
-POST {{host}}/matchbox/fhir/StructureMap/$transform?source=http://fhir.ch/ig/ch-epr-data-oe/immunizationadministration
+POST {{host}}/matchboxv3/fhir/StructureMap/$transform?source=http://fhir.ch/ig/ch-epr-data-oe/StructureMap/AdaptImmunizationAdministration
 Accept: application/fhir+json
 Content-Type: application/fhir+json
 
@@ -46,7 +46,7 @@ POST {{host}}/matchbox/fhir/StructureMap HTTP/1.1
 Accept: application/fhir+xml
 Content-Type: text/fhir-mapping
 
-< ./mappings/immunizationadministration.fml
+< ./mappings/AdaptImmunizationAdministration.fml
 
 
 ### we need also to upload the two CodeSystems since matchbox is not configure directly with them for the development setup (onengine) in the the matchboxv3 it comes through the depencxency
