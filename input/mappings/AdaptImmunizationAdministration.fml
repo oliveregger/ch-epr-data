@@ -1,0 +1,129 @@
+map "http://fhir.ch/ig/ch-epr-data-oe/StructureMap/AdaptImmunizationAdministration" = "AdaptImmunizationAdministration"
+
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as source
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias BundleTgt as target
+
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as source
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias CompositionTgt as target
+
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as source
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias PatientTgt as target
+
+uses "http://hl7.org/fhir/StructureDefinition/PractitionerRole" alias PractitionerRole as source
+uses "http://hl7.org/fhir/StructureDefinition/PractitionerRole" alias PractitionerRoleTgt as target
+
+uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as source
+uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias PractitionerTgt as target
+
+uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as source
+uses "http://hl7.org/fhir/StructureDefinition/Organization" alias OrganizationTgt as target
+
+uses "http://hl7.org/fhir/StructureDefinition/Immunization" alias Immunization as source
+uses "http://hl7.org/fhir/StructureDefinition/Immunization" alias ImmunizationTgt as target
+
+uses "http://hl7.org/fhir/StructureDefinition/Resource" alias Resource as source
+uses "http://hl7.org/fhir/StructureDefinition/Resource" alias ResourceTgt as target
+
+group Bundle(source src : Bundle, target tgt : BundleTgt) {
+  src.meta -> tgt.meta as meta, meta.profile = 'http://fhir.ch/ig/ch-vacd/StructureDefinition/ch-vacd-document-immunization-administration|5.0.0' "meta";
+  src.id as src -> tgt.id = src "id";
+  src.identifier as src -> tgt.identifier = src "identifier";
+  src.type as src -> tgt.type = src "type";
+  src.timestamp as src -> tgt.timestamp = src "timestamp";
+  src.entry as src where (fullUrl!='https://www.e-health-suisse.ch/Patient/Patient-author') -> tgt.entry as tgt then Entry(src, tgt) "entry";
+}
+
+group Resource(source src: Resource, target tgt: ResourceTgt) {
+  src.id as id -> tgt.id = id "id";
+}
+
+group Entry(source src, target tgt) {
+  src.fullUrl as fullUrl -> tgt.fullUrl = fullUrl "fullUrl";
+  src.resource : Composition as src -> tgt.resource = create('Composition') as tgt then Composition(src, tgt) "Composition"; 
+  // FIXME should work with direct assingement but does not yet src.resource : Composition -> tgt.resource
+  src.resource : Patient as src where (id!='Patient-author') -> tgt.resource = create('Patient') as tgt then Patient(src, tgt) "Patient";
+  src.resource : PractitionerRole as src -> tgt.resource = create('PractitionerRole') as tgt then PractitionerRole(src, tgt) "PractitionerRole";
+  src.resource : Practitioner as src -> tgt.resource = create('Practitioner') as tgt then Practitioner(src, tgt) "Practitioner";
+  src.resource : Organization as src -> tgt.resource = create('Organization') as tgt then Organization(src, tgt) "Organization";
+  src.resource : Immunization as src -> tgt.resource = create('Immunization') as tgt then Immunization(src, tgt) "Immunization";
+}
+
+group Patient(source src: Patient, target tgt: PatientTgt) extends Resource <<types>> {
+  src.identifier as src where (system!='urn:oid:2.16.756.5.30.1.127.3.10.3' or value.startsWith('761')) -> tgt.identifier = src "identifier";
+  src.identifier as src where (system='urn:oid:2.16.756.5.30.1.127.3.10.3' and (value.startsWith('761').not())) -> tgt.identifier as tgt, tgt.system='urn:oid:2.16.756.5.30.1.194.3.0.12.3.101', tgt.value = (%src.value) "identifier";
+  src.active as src -> tgt.active = src "active";
+  src.name as src -> tgt.name = src "name";
+  src.telecom as src -> tgt.telecom = src "telecom";
+  // don't consider unknown
+  src.gender as src where ($this != 'unknown') -> tgt.gender = src "gender";
+  src.birthDate as src -> tgt.birthDate = src "birthDate";
+}
+
+group Composition(source src: Composition, target tgt: CompositionTgt) extends Resource <<types>> {
+  src.language as language -> tgt.language = language "language";
+  src.identifier as src -> tgt.identifier = src "identifier";
+
+  src.status as src -> tgt.status = src "status";
+  src.type as src -> tgt.type = src "type";
+  src.category as src -> tgt.category = src "category";
+  src.subject as src -> tgt.subject = src "subject";
+  src.date as src -> tgt.date = src "date";
+  src.author as src -> tgt.author as tgt then {
+    src.reference as src where ($this = 'Patient/Patient-author') -> tgt.reference = 'Patient/Patient-0001' "reference";
+    src.reference as src where ($this != 'Patient/Patient-author') -> tgt.reference = src "reference";
+  } "author";
+  src.title as src -> tgt.title = src "title";
+  src.confidentiality as src -> tgt.confidentiality = create('code') as tgt then CodeConf(src, tgt) "confidentiality";
+  src.section as src -> tgt.section = src "section";
+
+  // add category
+  src where (category.empty()) -> tgt.category = cc("urn:oid:2.16.756.5.30.1.127.3.10.10", "urn:che:epr:ch-vacd:immunization-administration:2022") "category";
+}
+
+group CodeConf(source src: code, target tgt: code)  {
+  src.extension as src -> tgt.extension = src "organization";
+  src.value as src -> tgt.value = src "practitioner";
+}
+
+group PractitionerRole(source src: PractitionerRole, target tgt: PractitionerRoleTgt) extends Resource <<types>> {
+  src.organization as src -> tgt.organization = src "organization";
+  src.practitioner as src -> tgt.practitioner = src "practitioner";
+}
+
+group Practitioner(source src: Practitioner, target tgt: PractitionerTgt) extends Resource <<types>> {
+  src.identifier as src where (value.value != '7600000000000') -> tgt.identifier = src "identifier";
+  src.name as src -> tgt.name = src "name";
+  src.telecom as src -> tgt.telecom = src "telecom";
+}
+
+group Organization(source src: Organization, target tgt: OrganizationTgt) extends Resource <<types>> {
+  src.name as src -> tgt.name = (%src.trim()) "name";
+}
+
+group ImmunizationCodeableConcept(source src: CodeableConcept, target tgt: CodeableConcept) {
+    src.coding as coding where (system!='http://fhir.ch/ig/ch-vacd/CodeSystem/ch-vacd-myvaccines-cs') -> tgt.coding = coding "coding";
+    src.coding as coding where (system='http://fhir.ch/ig/ch-vacd/CodeSystem/ch-vacd-myvaccines-cs'  and 'http://fhir.ch/ig/ch-vacd/CodeSystem/ch-vacd-myvaccines-cs'.resolve().concept.where(code=%coding.code).exists()) -> tgt.coding = coding "coding";
+    src.coding as coding where  (system='http://fhir.ch/ig/ch-vacd/CodeSystem/ch-vacd-myvaccines-cs' and 'http://fhir.ch/ig/ch-vacd/CodeSystem/ch-vacd-swissmedic-cs'.resolve().concept.where(code=%coding.code).exists()) -> tgt.coding = create('Coding') as tgtcoding, 
+      tgtcoding.system = 'http://fhir.ch/ig/ch-vacd/CodeSystem/ch-vacd-swissmedic-cs', tgtcoding.code = (%coding.code), tgtcoding.display = (%coding.display) "fixwrongcodesystem";
+}
+
+group Immunization(source src: Immunization, target tgt: ImmunizationTgt) extends Resource <<types>> {
+  src.identifier as src -> tgt.identifier = src "identifier";
+  src.status as src -> tgt.status = src "status";
+  src.vaccineCode as src -> tgt.vaccineCode  = create('CodeableConcept') as tgt then ImmunizationCodeableConcept(src,tgt) "protocolApplied";
+  src.patient as src -> tgt.patient = src "patient";
+  src.occurrence as src -> tgt.occurrence = src "occurrenceDateTime";
+  src.lotNumber as src -> tgt.lotNumber = src "lotNumber";
+  src.performer as src -> tgt.performer = src "performer";
+  src.protocolApplied as src -> tgt.protocolApplied as tgt then ProtocolApplied(src,tgt) "protocolApplied";
+}
+
+group ProtocolApplied(source src, target tgt)  {
+  src.targetDisease as src -> tgt.targetDisease = create ('CodeableConcept') as tgt then TargetDisease(src, tgt) "targetDisease";
+  src.doseNumber as src -> tgt.doseNumber = src "doseNumberPositiveInt";
+}
+
+group TargetDisease(source src: CodeableConcept, target tgt: CodeableConcept)  {
+  src.coding as src where (system!='http://fhir.ch/ig/ch-vacd/ConceptMap-ch-vacd-vaccines-targetdiseases-cm')-> tgt.coding = src "coding";
+  src.coding as src where (system='http://fhir.ch/ig/ch-vacd/ConceptMap-ch-vacd-vaccines-targetdiseases-cm')-> tgt.coding as coding, coding.system = 'http://snomed.info/sct', coding.code = (%src.code), coding.display = (%src.display) "coding";
+}

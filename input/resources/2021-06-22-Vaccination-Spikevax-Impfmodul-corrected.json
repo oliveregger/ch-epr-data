@@ -1,0 +1,217 @@
+{
+  "resourceType": "Bundle",
+  "id": "2021-06-22-Vaccination-Spikevax-Impfmodul-corrected",
+  "meta": {
+    "profile": [
+      "http://fhir.ch/ig/ch-vacd/StructureDefinition/ch-vacd-document-immunization-administration|5.0.0"
+    ]
+  },
+  "identifier": {
+    "system": "urn:ietf:rfc:3986",
+    "value": "urn:uuid:27d87d4a-0c86-4162-b550-94d03c9cb44f"
+  },
+  "type": "document",
+  "timestamp": "2024-10-28T15:27:12.402+01:00",
+  "entry": [
+    {
+      "fullUrl": "https://www.e-health-suisse.ch/Composition/Composition-0001",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "Composition-0001",
+        "language": "en-US",
+        "identifier": {
+          "system": "urn:ietf:rfc:3986",
+          "value": "urn:uuid:a71e67a4-24d3-4b08-81f6-c2e829be98be"
+        },
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "41000179103",
+              "display": "Immunization record"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "urn:oid:2.16.756.5.30.1.127.3.10.10",
+                "code": "urn:che:epr:ch-vacd:immunization-administration:2022"
+              }
+            ]
+          }
+        ],
+        "subject": {
+          "reference": "Patient/Patient-0001"
+        },
+        "date": "2024-10-28T15:27:12+01:00",
+        "author": [
+          {
+            "reference": "Patient/Patient-author"
+          }
+        ],
+        "title": "Immunization Administration",
+        "confidentiality": "N",
+        "_confidentiality": {
+          "extension": [
+            {
+              "url": "http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-confidentialitycode",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "17621005",
+                    "display": "Normal"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "section": [
+          {
+            "id": "administration",
+            "title": "Immunization Administration",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "11369-6",
+                  "display": "Hx of Immunization"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">empty</div>"
+            },
+            "entry": [
+              {
+                "reference": "Immunization/Immunization-0001"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://www.e-health-suisse.ch/Patient/Patient-author",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "Patient-author",
+        "identifier": [
+          {
+            "system": "urn:oid:2.16.756.5.30.1.194.3.0.12.3.101",
+            "value": "urn:uuid:617b9d6e-1aea-4abe-97aa-24df6627d698"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "family": "Oliver Ulrich",
+            "given": [
+              "Egger"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1971-12-04"
+      }
+    },
+    {
+      "fullUrl": "https://www.e-health-suisse.ch/Patient/Patient-0001",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "Patient-0001",
+        "identifier": [
+          {
+            "system": "urn:oid:2.16.756.5.30.1.127.3.10.3",
+            "value": "761337615470857705"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "family": "Egger",
+            "given": [
+              "Oliver Ulrich"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1971-12-04"
+      }
+    },
+    {
+      "fullUrl": "https://www.e-health-suisse.ch/PractitionerRole/PractitionerRole-0001",
+      "resource": {
+        "resourceType": "PractitionerRole",
+        "id": "PractitionerRole-0001",
+        "organization": {
+          "reference": "Organization/Organization-0001"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://www.e-health-suisse.ch/Organization/Organization-0001",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "Organization-0001",
+        "name": "Impfzentrum Triemli Zürich"
+      }
+    },
+    {
+      "fullUrl": "https://www.e-health-suisse.ch/Immunization/Immunization-0001",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "Immunization-0001",
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:ee52f78b-199b-41f1-ab08-9dd8d5f7750a"
+          }
+        ],
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "system": "http://fhir.ch/ig/ch-vacd/CodeSystem/ch-vacd-swissmedic-cs",
+              "code": "68267",
+              "display": "Spikevax (COVID-19 Vaccine, Moderna)"
+            }
+          ]
+        },
+        "patient": {
+          "reference": "Patient/Patient-0001"
+        },
+        "occurrenceDateTime": "2021-06-22T00:00:00+02:00",
+        "lotNumber": "3003606",
+        "performer": [
+          {
+            "actor": {
+              "reference": "PractitionerRole/PractitionerRole-0001"
+            }
+          }
+        ],
+        "protocolApplied": [
+          {
+            "targetDisease": [
+              {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "840539006",
+                    "display": "Disease caused by Severe acute respiratory syndrome coronavirus 2 (disorder)"
+                  }
+                ]
+              }
+            ],
+            "doseNumberPositiveInt": 1
+          }
+        ]
+      }
+    }
+  ]
+}

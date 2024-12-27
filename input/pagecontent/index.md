@@ -1,14 +1,20 @@
 ### Introduction
 
-**CH IG** is a template for creating a [HL7 Switzerland](https://www.hl7.ch/) FHIR implementation guide.    
+This IG helps with structured data of health data which can be made available in the Swiss EPR.
 
+1. Vaccination data
 
-<div>{% include overview.svg %}</div>
+Vaccination is the the first structured data which can be share in the Swiss EPR. eHealth Suisse provides a module
+which allows to document immunization administrations, see documentation in [german](https://www.e-health-suisse.ch/en/latest-news/impfausweis-im-epd), [french](https://www.e-health-suisse.ch/fr/nouveautes/carnet-de-vaccination-dans-le-dep) or [italian](https://www.e-health-suisse.ch/it/novita/certificato-di-vaccinazione-nella-cip).
+
+The vaccination administrations are stored as documents according to the FHIR CH VACD [exchange formats](https://fhir.ch/ig/ch-vacd/index.html).
+
+See further example data [here](vacd.html)
 
 
 ### Source and Download
 
-[GitHub Repository](https://github.com/ahdis/ch-ig)
+[GitHub Repository](https://github.com/oliveregger/ch-epr-data-oe)
 
 **Download**: You can download this implementation guide in the [NPM package](https://confluence.hl7.org/display/FHIR/NPM+Package+Specification) format from [here](package.tgz).
 

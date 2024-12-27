@@ -1,0 +1,68 @@
+### test setup for cleaning with matchboxv3 an ig configured
+@host = https://test.ahdis.ch
+
+
+### FHIR Tutorial do the transform
+POST {{host}}/matchbox/fhir/StructureMap/$transform?source=http://fhir.ch/ig/ch-epr-data-oe/immunizationadministration
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+< ./input/resources/2021-06-22-Vaccination-Spikevax-Impfmodul.json
+
+
+### FHIR Tutorial do the transform
+POST {{host}}/matchbox/fhir/StructureMap/$transform?source=http://fhir.ch/ig/ch-epr-data-oe/immunizationadministration
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+< ./input/resources/2024-12-13-FluarixTextra.json
+
+
+### FHIR Tutorial do the transform
+POST {{host}}/matchbox/fhir/StructureMap/$transform?source=http://fhir.ch/ig/ch-epr-data-oe/immunizationadministration
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+< ./input/resources/2024-06-16-FSME.json
+
+### FHIR Tutorial do the transform
+POST {{host}}/matchbox/fhir/StructureMap/$transform?source=http://fhir.ch/ig/ch-epr-data-oe/immunizationadministration
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+< ./input/resources/2024-06-24-emedo-corrected.json
+
+
+### clean immunization administration - development version with matchbox 
+@host = https://test.ahdis.ch
+
+
+### development version
+GET {{host}}/matchbox/fhir/metadata HTTP/1.1
+
+
+### Post the StructureMap with transform included
+POST {{host}}/matchbox/fhir/StructureMap HTTP/1.1
+Accept: application/fhir+xml
+Content-Type: text/fhir-mapping
+
+< ./mappings/immunizationadministration.fml
+
+
+### we need also to upload the two CodeSystems since matchbox is not configure directly with them for the development setup (onengine) in the the matchboxv3 it comes through the depencxency
+
+POST {{host}}/matchbox/fhir/CodeSystem HTTP/1.1
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+< ./CodeSystem-ch-vacd-myvaccines-cs.json
+
+### we need also to upload the two CodeSystems since matchbox is not configure directly with them
+
+POST {{host}}/matchbox/fhir/CodeSystem HTTP/1.1
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+< ./CodeSystem-ch-vacd-swissmedic-cs.json
+
+
